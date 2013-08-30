@@ -129,9 +129,9 @@ describe("Word Cloud Directive", function() {
 				});
 
 				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('');
-					expect(element.find('button').eq(1).css('font-size')).toBe('');
-					expect(element.find('button').eq(2).css('font-size')).toBe('');
+					expect(element.find('button').eq(0).css('font-size')).not.toBeOneOf(['1em','16px']);
+					expect(element.find('button').eq(1).css('font-size')).not.toBeOneOf(['3em','48px']);
+					expect(element.find('button').eq(2).css('font-size')).not.toBeOneOf(['2em','32px']);
 				});
 
 			});
@@ -150,12 +150,6 @@ describe("Word Cloud Directive", function() {
 					expect(buttons.eq(2).find('span').text()).toBe('two');
 				});
 
-				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('');
-					expect(element.find('button').eq(1).css('font-size')).toBe('');
-					expect(element.find('button').eq(2).css('font-size')).toBe('');
-				});
-
 			});
 
 			describe('as a list sorted in descending order by size',function() {
@@ -170,12 +164,6 @@ describe("Word Cloud Directive", function() {
 					expect(buttons.eq(0).find('span').text()).toBe('two');
 					expect(buttons.eq(1).find('span').text()).toBe('three');
 					expect(buttons.eq(2).find('span').text()).toBe('one');
-				});
-
-				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('');
-					expect(element.find('button').eq(1).css('font-size')).toBe('');
-					expect(element.find('button').eq(2).css('font-size')).toBe('');
 				});
 
 			});
@@ -212,9 +200,9 @@ describe("Word Cloud Directive", function() {
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('1em');
-					expect(element.find('button').eq(1).css('font-size')).toBe('3em');
-					expect(element.find('button').eq(2).css('font-size')).toBe('2em');
+					expect(element.find('button').eq(0).css('font-size')).toBeOneOf(['1em','16px']);
+					expect(element.find('button').eq(1).css('font-size')).toBeOneOf(['3em','48px']);
+					expect(element.find('button').eq(2).css('font-size')).toBeOneOf(['2em','32px']);
 				});
 
 			});
@@ -234,9 +222,9 @@ describe("Word Cloud Directive", function() {
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('1em');
-					expect(element.find('button').eq(1).css('font-size')).toBe('2em');
-					expect(element.find('button').eq(2).css('font-size')).toBe('3em');
+					expect(element.find('button').eq(0).css('font-size')).toBeOneOf(['1em','16px']);
+					expect(element.find('button').eq(1).css('font-size')).toBeOneOf(['2em','32px']);
+					expect(element.find('button').eq(2).css('font-size')).toBeOneOf(['3em','48px']);
 				});
 
 			});
@@ -256,9 +244,9 @@ describe("Word Cloud Directive", function() {
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('3em');
-					expect(element.find('button').eq(1).css('font-size')).toBe('2em');
-					expect(element.find('button').eq(2).css('font-size')).toBe('1em');
+					expect(element.find('button').eq(0).css('font-size')).toBeOneOf(['3em','48px']);
+					expect(element.find('button').eq(1).css('font-size')).toBeOneOf(['2em','32px']);
+					expect(element.find('button').eq(2).css('font-size')).toBeOneOf(['1em','16px']);
 				});
 
 			});
@@ -285,12 +273,6 @@ describe("Word Cloud Directive", function() {
 					expect(buttons.eq(2).find('span').text()).toBe('three');
 				});
 
-				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('');
-					expect(element.find('button').eq(1).css('font-size')).toBe('');
-					expect(element.find('button').eq(2).css('font-size')).toBe('');
-				});
-
 			});
 
 			describe('as a list sorted in ascending order by size',function() {
@@ -307,12 +289,6 @@ describe("Word Cloud Directive", function() {
 					expect(buttons.eq(2).find('span').text()).toBe('three');
 				});
 
-				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('');
-					expect(element.find('button').eq(1).css('font-size')).toBe('');
-					expect(element.find('button').eq(2).css('font-size')).toBe('');
-				});
-
 			});
 
 			describe('as a list sorted in descending order by size',function() {
@@ -327,12 +303,6 @@ describe("Word Cloud Directive", function() {
 					expect(buttons.eq(0).find('span').text()).toBe('three');
 					expect(buttons.eq(1).find('span').text()).toBe('one');
 					expect(buttons.eq(2).find('span').text()).toBe('two');
-				});
-
-				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('');
-					expect(element.find('button').eq(1).css('font-size')).toBe('');
-					expect(element.find('button').eq(2).css('font-size')).toBe('');
 				});
 
 			});

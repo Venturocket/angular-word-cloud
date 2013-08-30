@@ -18,6 +18,12 @@ beforeEach(function(){
 				return "Expected '" + angular.mock.dump(this.actual) + "'"+(this.isNot?" not":"")+" to be a '" + tag + "' tag.";
 			};
 			return this.actual.prop('tagName') == tag;
+		},
+		toBeOneOf: function(options) {
+			this.message = function() {
+				return "Expected '" + this.actual + "'" + (this.isNot?" not":"") + " to be one of "+options+".";
+			};
+			return options.indexOf(this.actual) >= 0;
 		}
     });
 });
