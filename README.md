@@ -1,4 +1,4 @@
-# angular-word-cloud
+# angular-word-cloud [![Build Status](https://travis-ci.org/Venturocket/angular-word-cloud.png?branch=master)](https://travis-ci.org/Venturocket/angular-word-cloud)
 Simple (like, really simple) word cloud AngularJS directive.
 
 ## Usage
