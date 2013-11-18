@@ -1,6 +1,6 @@
 {
     "name": "angular-word-cloud",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "main": "./build/angular-word-cloud.min.js",
     "ignore": [
         "**/.*",
@@ -8,7 +8,7 @@
         "components"
     ],
     "dependencies": {
-        "angular": "~1.0.7"
+        "angular": "~1.2.0"
     },
     "devDependencies": {
         "angular-mocks": "*",
