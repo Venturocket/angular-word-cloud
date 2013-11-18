@@ -10,6 +10,7 @@ As an element:
 	type="{string}"
 	sort="{string}"
 	ng-click="{string}">
+	<any html here>See "Word HTML" section for details</any html here>
 </word-cloud>
 ```
 As an attribute:
@@ -20,6 +21,7 @@ As an attribute:
 	type="{string}"
 	sort="{string}"
 	ng-click="{string}">
+	<any html here>See "Word HTML" section for details</any html here>
 </div>
 ```
 
@@ -29,7 +31,26 @@ As an attribute:
 |words	|string	|yes    	|none 	|Angular expression from which to get the words. See the "Words Array" section below for details. |
 |type	|string |no 		|list 	|How to format the words. See the "Cloud Types" section below for details. |
 |sort	|string	|no    		|no 	|How to sort the words. See the "Sorting Options" section below for details. |
-|ng-click|string|no    		|none 	|The click function for each word. The word clicked will be passed to the function. Omit the parentheses, e.g. "clickFn" not "clickFn()"  |
+|ng-click|string|no    		|none 	|The click function to expose. Omit the parentheses, e.g. "clickFn" not "clickFn()"  |
+
+#### Word HTML
+This will transclude any HTML into each word in the cloud, so something like this:
+```
+<word-cloud ...>
+	<button ng-click="clickFn(word)">{{ word.word }}</button>
+</word-cloud>
+```
+will result in every word in the cloud being a button which, when clicked, calls the function specified by ng-click on the word-cloud tag.  
+Each word is exposed as an object in this form:
+```
+{
+	word: "{string}",
+	size: "{string - css size}",
+	rawSize: {float}
+}
+```
+Also exposed is a reference to whatever function has been specified as the ng-click in the word-cloud tag as `clickFn`. You can use it just like the
+original.
 
 #### Words Array
 The word cloud expects the array of words to be in one of two formats:  

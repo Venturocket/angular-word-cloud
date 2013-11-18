@@ -21,38 +21,38 @@ describe("Word Cloud Directive", function() {
 		describe('and an ngClick attribute', function() {
 
 			beforeEach(function() {
-				element = $compile("<word-cloud words='words' ng-click='clicked'></word-cloud>")($rootScope);
+				element = $compile("<word-cloud words='words' ng-click='clicked'><a href='javascript;:' ng-click='clickFn(word.word)'>{{ word.word }}</a></word-cloud>")($rootScope);
 				$rootScope.$digest();
 			});
 
 			it('should add the elements to the dom', function() {
 				expect(element).toBeTag('DIV');
-				expect(element).toHaveClass('word-cloud');
+				expect(element).toHaveClass('word-cloud-group');
 
-				var buttons = element.find('button');
-				expect(buttons.length).toBe(3);
-				expect(buttons.eq(0).attr('ng-click')).toBe('clickFn(word.word)');
-				expect(buttons.eq(0).attr('style')).toBe(undefined);
-				expect(buttons.eq(0).find('span').text()).toBe('one');
-				expect(buttons.eq(1).find('span').text()).toBe('two');
-				expect(buttons.eq(2).find('span').text()).toBe('three');
+				var words = element.find('span');
+				expect(words.length).toBe(3);
+				expect(words.eq(0)).toHaveClass('word-cloud-group-item');
+				expect(words.eq(0).attr('style')).toBe(undefined);
+				expect(words.eq(0).find('a').text()).toBe('one');
+				expect(words.eq(1).find('a').text()).toBe('two');
+				expect(words.eq(2).find('a').text()).toBe('three');
 			});
 
 			it('should send the word with the click', function() {
-				element.find('button').eq(0).click();
+				element.find('a').eq(0).click();
 				expect($rootScope.clicked).toHaveBeenCalledWith('one');
 			});
 
 			it('should add another word to the list', function() {
 				$rootScope.$apply(function() { $rootScope.words.push('four'); });
-				expect(element.find('button').length).toBe(4);
-				expect(element.find('button').eq(3).find('span').text()).toBe('four');
+				expect(element.find('span').length).toBe(4);
+				expect(element.find('span').eq(3).find('a').text()).toBe('four');
 			});
 
 			it('should remove a word from the list', function() {
 				$rootScope.$apply(function() { $rootScope.words.splice(1,1); });
-				expect(element.find('button').length).toBe(2);
-				expect(element.find('button').eq(1).find('span').text()).toBe('three');
+				expect(element.find('span').length).toBe(2);
+				expect(element.find('span').eq(1).find('a').text()).toBe('three');
 			});
 
 		});
@@ -60,15 +60,15 @@ describe("Word Cloud Directive", function() {
 		describe('sorted in ascending order alphabetically',function() {
 
 			beforeEach(function() {
-				element = $compile("<word-cloud words='words' sort='alphaAsc'></word-cloud>")($rootScope);
+				element = $compile("<word-cloud words='words' sort='alphaAsc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 				$rootScope.$digest();
 			});
 
 			it('should put them in ascending order', function() {
-				var buttons = element.find('button');
-				expect(buttons.eq(0).find('span').text()).toBe('one');
-				expect(buttons.eq(1).find('span').text()).toBe('three');
-				expect(buttons.eq(2).find('span').text()).toBe('two');
+				var words = element.find('span');
+				expect(words.eq(0).find('p').text()).toBe('one');
+				expect(words.eq(1).find('p').text()).toBe('three');
+				expect(words.eq(2).find('p').text()).toBe('two');
 			});
 
 		});
@@ -76,33 +76,18 @@ describe("Word Cloud Directive", function() {
 		describe('sorted in descending order alphabetically',function() {
 
 			beforeEach(function() {
-				element = $compile("<word-cloud words='words' sort='alphaDesc'></word-cloud>")($rootScope);
+				element = $compile("<word-cloud words='words' sort='alphaDesc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 				$rootScope.$digest();
 			});
 
 			it('should put them in descending order', function() {
-				var buttons = element.find('button');
-				expect(buttons.eq(0).find('span').text()).toBe('two');
-				expect(buttons.eq(1).find('span').text()).toBe('three');
-				expect(buttons.eq(2).find('span').text()).toBe('one');
+				var words = element.find('span');
+				expect(words.eq(0).find('p').text()).toBe('two');
+				expect(words.eq(1).find('p').text()).toBe('three');
+				expect(words.eq(2).find('p').text()).toBe('one');
 			});
 
 		});
-
-		describe('with some child elements', function() {
-
-			beforeEach(function() {
-				element = $compile("<word-cloud words='words'><span>hmm</span></word-cloud>")($rootScope);
-				$rootScope.$digest();
-			});
-
-			it('should transclude the child elements to each button', function() {
-				var buttons = element.find('button');
-				expect(buttons.eq(0).children().length).toBe(2);
-				expect(buttons.eq(0).children().eq(1).text()).toBe('hmm');
-			});
-
-		})
 
 	});
 
@@ -117,21 +102,21 @@ describe("Word Cloud Directive", function() {
 			describe('as an unsorted list',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should keep the words in the order they came in', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('two');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('two');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 				it('should not set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).not.toBeOneOf(['1em','16px']);
-					expect(element.find('button').eq(1).css('font-size')).not.toBeOneOf(['3em','48px']);
-					expect(element.find('button').eq(2).css('font-size')).not.toBeOneOf(['2em','32px']);
+					expect(element.find('span').eq(0).css('font-size')).not.toBeOneOf(['1em','16px']);
+					expect(element.find('span').eq(1).css('font-size')).not.toBeOneOf(['3em','48px']);
+					expect(element.find('span').eq(2).css('font-size')).not.toBeOneOf(['2em','32px']);
 				});
 
 			});
@@ -139,15 +124,15 @@ describe("Word Cloud Directive", function() {
 			describe('as a list sorted in ascending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list' sort='asc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list' sort='asc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in ascending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('three');
-					expect(buttons.eq(2).find('span').text()).toBe('two');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('three');
+					expect(buttons.eq(2).find('p').text()).toBe('two');
 				});
 
 			});
@@ -155,15 +140,15 @@ describe("Word Cloud Directive", function() {
 			describe('as a list sorted in descending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list' sort='desc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list' sort='desc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in descending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('two');
-					expect(buttons.eq(1).find('span').text()).toBe('three');
-					expect(buttons.eq(2).find('span').text()).toBe('one');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('two');
+					expect(buttons.eq(1).find('p').text()).toBe('three');
+					expect(buttons.eq(2).find('p').text()).toBe('one');
 				});
 
 			});
@@ -171,16 +156,16 @@ describe("Word Cloud Directive", function() {
 			describe('when the size of a word is changed',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list' sort='desc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list' sort='desc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 					$rootScope.$apply(function() { $rootScope.words[0].size = 4; })
 				});
 
 				it('should put them in descending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('two');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('two');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 			});
@@ -188,21 +173,21 @@ describe("Word Cloud Directive", function() {
 			describe('as an unsorted cloud',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='cloud'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='cloud'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should keep the words in the order they came in', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('two');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('two');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBeOneOf(['1em','16px']);
-					expect(element.find('button').eq(1).css('font-size')).toBeOneOf(['3em','48px']);
-					expect(element.find('button').eq(2).css('font-size')).toBeOneOf(['2em','32px']);
+					expect(element.find('span').eq(0).css('font-size')).toBeOneOf(['1em','16px']);
+					expect(element.find('span').eq(1).css('font-size')).toBeOneOf(['3em','48px']);
+					expect(element.find('span').eq(2).css('font-size')).toBeOneOf(['2em','32px']);
 				});
 
 			});
@@ -210,21 +195,21 @@ describe("Word Cloud Directive", function() {
 			describe('as a cloud sorted in ascending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='cloud' sort='asc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='cloud' sort='asc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in ascending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('three');
-					expect(buttons.eq(2).find('span').text()).toBe('two');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('three');
+					expect(buttons.eq(2).find('p').text()).toBe('two');
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBeOneOf(['1em','16px']);
-					expect(element.find('button').eq(1).css('font-size')).toBeOneOf(['2em','32px']);
-					expect(element.find('button').eq(2).css('font-size')).toBeOneOf(['3em','48px']);
+					expect(element.find('span').eq(0).css('font-size')).toBeOneOf(['1em','16px']);
+					expect(element.find('span').eq(1).css('font-size')).toBeOneOf(['2em','32px']);
+					expect(element.find('span').eq(2).css('font-size')).toBeOneOf(['3em','48px']);
 				});
 
 			});
@@ -232,21 +217,21 @@ describe("Word Cloud Directive", function() {
 			describe('as a cloud sorted in descending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='cloud' sort='desc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='cloud' sort='desc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in descending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('two');
-					expect(buttons.eq(1).find('span').text()).toBe('three');
-					expect(buttons.eq(2).find('span').text()).toBe('one');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('two');
+					expect(buttons.eq(1).find('p').text()).toBe('three');
+					expect(buttons.eq(2).find('p').text()).toBe('one');
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBeOneOf(['3em','48px']);
-					expect(element.find('button').eq(1).css('font-size')).toBeOneOf(['2em','32px']);
-					expect(element.find('button').eq(2).css('font-size')).toBeOneOf(['1em','16px']);
+					expect(element.find('span').eq(0).css('font-size')).toBeOneOf(['3em','48px']);
+					expect(element.find('span').eq(1).css('font-size')).toBeOneOf(['2em','32px']);
+					expect(element.find('span').eq(2).css('font-size')).toBeOneOf(['1em','16px']);
 				});
 
 			});
@@ -262,15 +247,15 @@ describe("Word Cloud Directive", function() {
 			describe('as an unsorted list',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should keep the words in the order they came in', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('two');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('two');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 			});
@@ -278,15 +263,15 @@ describe("Word Cloud Directive", function() {
 			describe('as a list sorted in ascending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list' sort='asc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list' sort='asc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in ascending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('two');
-					expect(buttons.eq(1).find('span').text()).toBe('one');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('two');
+					expect(buttons.eq(1).find('p').text()).toBe('one');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 			});
@@ -294,15 +279,15 @@ describe("Word Cloud Directive", function() {
 			describe('as a list sorted in descending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='list' sort='desc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='list' sort='desc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in ascending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('three');
-					expect(buttons.eq(1).find('span').text()).toBe('one');
-					expect(buttons.eq(2).find('span').text()).toBe('two');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('three');
+					expect(buttons.eq(1).find('p').text()).toBe('one');
+					expect(buttons.eq(2).find('p').text()).toBe('two');
 				});
 
 			});
@@ -310,21 +295,21 @@ describe("Word Cloud Directive", function() {
 			describe('as an unsorted cloud',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='cloud'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='cloud'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should keep the words in the order they came in', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('one');
-					expect(buttons.eq(1).find('span').text()).toBe('two');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('one');
+					expect(buttons.eq(1).find('p').text()).toBe('two');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('15px');
-					expect(element.find('button').eq(1).css('font-size')).toBe('10px');
-					expect(element.find('button').eq(2).css('font-size')).toBe('20px');
+					expect(element.find('span').eq(0).css('font-size')).toBe('15px');
+					expect(element.find('span').eq(1).css('font-size')).toBe('10px');
+					expect(element.find('span').eq(2).css('font-size')).toBe('20px');
 				});
 
 			});
@@ -332,21 +317,21 @@ describe("Word Cloud Directive", function() {
 			describe('as a cloud sorted in ascending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='cloud' sort='asc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='cloud' sort='asc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in ascending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('two');
-					expect(buttons.eq(1).find('span').text()).toBe('one');
-					expect(buttons.eq(2).find('span').text()).toBe('three');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('two');
+					expect(buttons.eq(1).find('p').text()).toBe('one');
+					expect(buttons.eq(2).find('p').text()).toBe('three');
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('10px');
-					expect(element.find('button').eq(1).css('font-size')).toBe('15px');
-					expect(element.find('button').eq(2).css('font-size')).toBe('20px');
+					expect(element.find('span').eq(0).css('font-size')).toBe('10px');
+					expect(element.find('span').eq(1).css('font-size')).toBe('15px');
+					expect(element.find('span').eq(2).css('font-size')).toBe('20px');
 				});
 
 			});
@@ -354,21 +339,21 @@ describe("Word Cloud Directive", function() {
 			describe('as a cloud sorted in descending order by size',function() {
 
 				beforeEach(function() {
-					element = $compile("<word-cloud words='words' type='cloud' sort='desc'></word-cloud>")($rootScope);
+					element = $compile("<word-cloud words='words' type='cloud' sort='desc'><p>{{ word.word }}</p></word-cloud>")($rootScope);
 					$rootScope.$digest();
 				});
 
 				it('should put them in descending order', function() {
-					var buttons = element.find('button');
-					expect(buttons.eq(0).find('span').text()).toBe('three');
-					expect(buttons.eq(1).find('span').text()).toBe('one');
-					expect(buttons.eq(2).find('span').text()).toBe('two');
+					var buttons = element.find('span');
+					expect(buttons.eq(0).find('p').text()).toBe('three');
+					expect(buttons.eq(1).find('p').text()).toBe('one');
+					expect(buttons.eq(2).find('p').text()).toBe('two');
 				});
 
 				it('should set the size of the buttons individually', function() {
-					expect(element.find('button').eq(0).css('font-size')).toBe('20px');
-					expect(element.find('button').eq(1).css('font-size')).toBe('15px');
-					expect(element.find('button').eq(2).css('font-size')).toBe('10px');
+					expect(element.find('span').eq(0).css('font-size')).toBe('20px');
+					expect(element.find('span').eq(1).css('font-size')).toBe('15px');
+					expect(element.find('span').eq(2).css('font-size')).toBe('10px');
 				});
 
 			});

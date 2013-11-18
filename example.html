@@ -3,10 +3,13 @@
 <head>
     <title>Word Cloud directive for AngularJS</title>
     <style>
-	    div.word-cloud {
+	    div.word-cloud-group {
 		    border: 1px solid green;
 		    text-align: center;
 		    display: inline-block;
+	    }
+	    div.word-cloud-group .word-cloud-group-item button {
+		    font-size: inherit;
 	    }
 		button {
 			border: 0px;
@@ -21,7 +24,9 @@
 
 	<div id='container' ng-controller="MainCtrl">
 		<h3>List</h3>
-	    <word-cloud words='words' ng-click='clickMe1' type='list' sort='{{ sort1 }}'></word-cloud>
+	    <word-cloud words='words' ng-click='clickMe1' type='list' sort='{{ sort1 }}'>
+		    <button type="button" ng-click="clickFn(word.word)">{{ word.word }}</button>
+	    </word-cloud>
 		<br /><br />
 		<div>Clicked word: <span ng-bind='word1' ng-init="word1 = ''"></span></div>
 		<div>
@@ -32,7 +37,9 @@
 		<br />
 		<hr />
 		<h3>Cloud</h3>
-	    <word-cloud words='words' ng-click='clickMe2' type='cloud' sort='{{ sort2 }}'></word-cloud>
+	    <word-cloud words='words' ng-click='clickMe2' type='cloud' sort='{{ sort2 }}'>
+		    <button type="button" ng-click="clickFn(word.word)">{{ word.word }}</button>
+	    </word-cloud>
 		<br /><br />
 		<div>Clicked word: <span ng-bind='word2' ng-init="word2 = ''"></span></div>
 		<div>

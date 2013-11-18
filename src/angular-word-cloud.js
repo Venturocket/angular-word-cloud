@@ -20,8 +20,8 @@ angular.module('vr.directives.wordCloud',[])
 				sort: '@'
 			},
 			template:
-				"<div class='word-cloud'>"+
-					"<button ng-click='clickFn(word.word)' ng-repeat='word in mywords | orderBy:param:reverse' ng-transclude><span ng-bind='word.word'></span></button>" +
+				"<div class='word-cloud-group'>" +
+					"<span class='word-cloud-group-item' ng-repeat='word in mywords | orderBy:param:reverse' ng-transclude></span>" +
 				"</div>",
 			controller: ['$scope', '$transclude', function($scope, $transclude) {
 
@@ -39,7 +39,7 @@ angular.module('vr.directives.wordCloud',[])
 				var type = angular.isUndefined(attr.type) ? 'list' : attr.type;
 				switch(type) {
 					case 'cloud':
-						elem.find('button').attr('style',"font-size: "+$interpolate.startSymbol()+" fontSize(word.size) "+$interpolate.endSymbol()+";");
+						elem.children().eq(0).attr('style',"font-size: "+$interpolate.startSymbol()+" fontSize(word.size) "+$interpolate.endSymbol()+";");
 						break;
 					case 'list':
 						break;
