@@ -1,6 +1,6 @@
 {
     "name": "angular-word-cloud",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "main": "./build/angular-word-cloud.min.js",
     "ignore": [
         "**/.*",
