@@ -39,7 +39,11 @@ angular.module('vr.directives.wordCloud',[])
 				var type = angular.isUndefined(attr.type) ? 'list' : attr.type;
 				switch(type) {
 					case 'cloud':
-						elem.children().eq(0).attr('style',"font-size: "+$interpolate.startSymbol()+" fontSize(word.size) "+$interpolate.endSymbol()+";");
+						elem.children().eq(0).attr(
+							'style',
+								"font-size: " + $interpolate.startSymbol() + " fontSize(word.size) " + $interpolate.endSymbol() + ";" +
+								"font-weight: " + $interpolate.startSymbol() + " fontWeight(word) " + $interpolate.endSymbol() + ";"
+						);
 						break;
 					case 'list':
 						break;
@@ -68,7 +72,36 @@ angular.module('vr.directives.wordCloud',[])
 							words = [];
 						}
 
-						words = words.map(function(e) { return {word: e.word, size: e.size, rawSize: parseFloat(e.size) }; });
+						var min = words.reduce(function(a,b){
+							if(a.size < b.size) {
+								return a;
+							}
+							return b;
+						}).size;
+
+						var max = words.reduce(function(a,b){
+							if(a.size > b.size) {
+								return a;
+							}
+							return b;
+						}).size;
+
+						var uniqueCount = unique(
+							words.map(function(word){
+								return word.size.toString();
+							})
+						).length;
+
+						words = words.map(function(e) {
+							return {
+								word: e.word,
+								size: e.size,
+								rawSize: parseFloat(e.size),
+								min: min,
+								max: max,
+								uniqueCount: uniqueCount
+							};
+						});
 
 						scope.mywords = words;
 					};
@@ -78,6 +111,20 @@ angular.module('vr.directives.wordCloud',[])
 							return size+'em';
 						}
 						return size;
+					};
+
+					scope.fontWeight = function(word) {
+
+						var weightRange = (word.max - word.min) / ( word.uniqueCount < 9 ? word.uniqueCount : 9);
+
+						for( var i = 0; i < 10; i++) {
+
+							if ( word.size < (weightRange * i) ){
+								return i * 100;
+							}
+						}
+
+						return 900;
 					};
 
 					scope.$watch('words',function() {
@@ -90,6 +137,19 @@ angular.module('vr.directives.wordCloud',[])
 						scope.reverse = newVal.substr(-4).toLowerCase() == 'desc';
 					});
 
+					function unique(array){
+						var u = {},
+							a = [];
+
+						for(var i = 0; i < array.length; ++i){
+							if(u.hasOwnProperty(array[i])) {
+								continue;
+							}
+							a.push(array[i]);
+							u[array[i]] = 1;
+						}
+						return a;
+					}
 				}
 			}
 		};
