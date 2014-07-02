@@ -72,19 +72,24 @@ angular.module('vr.directives.wordCloud',[])
 							words = [];
 						}
 
-						var min = words.reduce(function(a,b){
-							if(a.size < b.size) {
-								return a;
-							}
-							return b;
-						}).size;
+						var min = 0,
+							max = 0;
 
-						var max = words.reduce(function(a,b){
-							if(a.size > b.size) {
-								return a;
-							}
-							return b;
-						}).size;
+						if ( angular.isArray(words) && words.length > 0 ){
+							min = words.reduce(function(a,b){
+								if(a.size < b.size) {
+									return a;
+								}
+								return b;
+							}).size;
+
+							max = words.reduce(function(a,b){
+								if(a.size > b.size) {
+									return a;
+								}
+								return b;
+							}).size;
+						}
 
 						var uniqueCount = unique(
 							words.map(function(word){
