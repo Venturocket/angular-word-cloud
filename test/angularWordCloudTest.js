@@ -93,7 +93,32 @@ describe("Word Cloud Directive", function() {
 
 	describe('with an array', function() {
 
-		
+		describe('using custom properties', function() {
+			beforeEach(function() {
+				$rootScope.words = [
+					{word:'one',size:1, custom: 'value one'},
+					{word:'two',size:3, custom: 'value two'},
+					{word:'three',size:2, custom: 'value three'}
+				];
+
+				/*jshint quotmark: double */
+				element = $compile(
+					"<word-cloud words='words' type='list'>" +
+						"<p>" +
+							"{{ word.word }}-{{ word.custom }}" +
+						"</p>" +
+					"</word-cloud>")($rootScope);
+
+				$rootScope.$digest();
+			});
+
+			it('should use ', function() {
+				var buttons = element.find('span');
+				expect(buttons.eq(0).find('p').text()).toBe('one-value one');
+				expect(buttons.eq(1).find('p').text()).toBe('two-value two');
+				expect(buttons.eq(2).find('p').text()).toBe('three-value three');
+			});
+		});
 
 		describe('using integer sizes', function() {
 
